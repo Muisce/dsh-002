@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b6efd">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg">
+<title>化学实验室安全题库 · 2000题</title>
+<style>
+:root{
+  --bg:#f2f4f8; --card:#fff; --ink:#1b2230; --sub:#6b7486; --line:#e5e9f0;
+  --blue:#0b6efd; --green:#12a150; --red:#e5484d; --amber:#f5a623; --shadow:0 2px 12px rgba(20,40,80,.07);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;background:#f2f4f8;color:#1b2230;
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;
+  -webkit-text-size-adjust:100%;}
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit;}
+.wrap{max-width:720px;margin:0 auto;min-height:100vh;position:relative;}
+.screen{display:none;padding:14px 14px 90px;}
+.screen.on{display:block;}
+.hd{position:sticky;top:0;z-index:20;background:rgba(242,244,248,.95);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  margin:-14px -14px 12px;padding:10px 14px 8px;border-bottom:1px solid #e5e9f0;}
+.hd-row{display:flex;align-items:center;gap:8px;}
+.hd h1{font-size:17px;margin:0;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hd .sub{font-size:12px;color:#6b7486;margin-top:2px;}
+.btn{background:#0b6efd;color:#fff;border-radius:10px;padding:10px 16px;font-size:15px;font-weight:600;}
+.btn:active{opacity:.82;}
+.btn.ghost{background:#e8eefc;color:#0b6efd;}
+.btn.gray{background:#eceff4;color:#445;}
+.btn.sm{padding:7px 12px;font-size:13px;border-radius:9px;}
+.btn[disabled]{opacity:.45;}
+.icon-btn{width:38px;height:38px;border-radius:10px;background:#eceff4;display:flex;align-items:center;justify-content:center;font-size:18px;flex:none;}
+.icon-btn.fav{background:#fff3d6;color:#e09a00;}
+.card{background:#fff;border-radius:14px;box-shadow:0 2px 12px rgba(20,40,80,.07);padding:16px;margin-bottom:12px;}
+.hero{background:linear-gradient(135deg,#0b6efd,#5a9bff);color:#fff;border-radius:18px;padding:22px 18px;box-shadow:0 8px 24px rgba(11,110,253,.28);}
+.hero h2{margin:0 0 6px;font-size:22px;}
+.hero p{margin:0;opacity:.93;font-size:13px;line-height:1.6;}
+.stats{display:flex;gap:8px;margin-top:16px;}
+.stat{flex:1;background:rgba(255,255,255,.16);border-radius:12px;padding:8px 4px;text-align:center;}
+.stat b{display:block;font-size:20px;}
+.stat span{font-size:11px;opacity:.9;}
+.sec-t{font-size:14px;font-weight:700;margin:18px 2px 10px;color:#334;}
+.chips{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{padding:9px 13px;border-radius:10px;background:#e8eefc;color:#0b6efd;font-size:13px;font-weight:600;border:1px solid transparent;}
+.chip.sel{background:#0b6efd;color:#fff;}
+.chip.plain{background:#eceff4;color:#445;}
+.chip.plain.sel{background:#334155;color:#fff;}
+.row{display:flex;gap:8px;}
+.row>*{flex:1;}
+.label{font-size:12px;color:#6b7486;margin:0 0 6px 2px;}
+.progress-line{height:8px;border-radius:8px;background:#e8ecf2;overflow:hidden;margin-top:6px;}
+.progress-line>i{display:block;height:100%;background:linear-gradient(90deg,#12a150,#5cd6a0);width:0;transition:width .25s;}
+.qmeta{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:10px;gap:6px 8px;}
+.qnum{font-size:13px;color:#6b7486;font-weight:600;white-space:nowrap;}
+.tags{display:flex;gap:6px;flex:none;}
+.tag{font-size:11px;padding:3px 8px;border-radius:20px;background:#eef2f8;color:#556;}
+.qtext{font-size:17px;line-height:1.7;font-weight:600;white-space:pre-wrap;word-break:break-word;}
+.opts{margin-top:14px;display:flex;flex-direction:column;gap:9px;}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1.5px solid #e5e9f0;border-radius:12px;background:#fff;font-size:15px;line-height:1.5;text-align:left;width:100%;}
+.opt .k{flex:none;min-width:26px;height:26px;padding:0 4px;border-radius:13px;background:#eef2f8;color:#556;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;}
+.opt.sel{border-color:#0b6efd;background:#f0f6ff;}
+.opt.sel .k{background:#0b6efd;color:#fff;}
+.opt.right{border-color:#12a150;background:#eafaf1;}
+.opt.right .k{background:#12a150;color:#fff;}
+.opt.wrong{border-color:#e5484d;background:#fdeeee;}
+.opt.wrong .k{background:#e5484d;color:#fff;}
+.opt.dis{pointer-events:none;}
+.fill{width:100%;padding:11px 12px;border:1.5px solid #e5e9f0;border-radius:10px;font-size:16px;margin-top:8px;background:#fff;color:#1b2230;}
+.blanks{display:flex;flex-direction:column;gap:8px;margin-top:6px;}
+.ans-box{margin-top:14px;padding:13px;border-radius:12px;background:#f7f9fc;border:1px solid #e5e9f0;font-size:14px;line-height:1.7;}
+.ans-box .ok{color:#12a150;font-weight:700;}
+.ans-box .no{color:#e5484d;font-weight:700;}
+.ans-box .lbl{color:#6b7486;font-size:12px;}
+.selfrow{display:flex;gap:8px;margin-top:12px;}
+.selfrow .btn{flex:1;}
+.navbar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(255,255,255,.97);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-top:1px solid #e5e9f0;
+  padding:8px 14px calc(8px + env(safe-area-inset-bottom));}
+.navbar .in{max-width:720px;margin:0 auto;display:flex;gap:8px;align-items:center;}
+.navbar .btn{flex:1;}
+.mask{position:fixed;top:0;left:0;right:0;bottom:0;inset:0;background:rgba(10,18,32,.5);z-index:50;display:none;}
+.mask.on{display:block;}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:60;background:#fff;border-radius:18px 18px 0 0;
+  max-height:82vh;transform:translateY(100%);transition:transform .22s;display:flex;flex-direction:column;}
+.sheet.on{transform:translateY(0);}
+.sheet-h{padding:14px 16px 10px;border-bottom:1px solid #e5e9f0;}
+.sheet-h h3{margin:0;font-size:16px;}
+.grid{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px 30px;display:grid;grid-template-columns:repeat(8,1fr);gap:7px;}
+@media(max-width:400px){.grid{grid-template-columns:repeat(7,1fr);gap:6px;}}
+.cell{position:relative;aspect-ratio:1;border-radius:9px;background:#eceff4;color:#5a6474;
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;}
+.cell.ok{background:#dff6e9;color:#0b7a3b;}
+.cell.no{background:#fde3e4;color:#c2282d;}
+.cell.cur{outline:2px solid #0b6efd;outline-offset:1px;}
+.cell .dot{position:absolute;top:3px;right:4px;font-size:9px;color:#e09a00;}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:#6b7486;margin-top:8px;}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:-1px;margin-right:3px;}
+.toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%);background:rgba(20,26,38,.92);color:#fff;
+  padding:9px 16px;border-radius:20px;font-size:13px;z-index:80;opacity:0;transition:opacity .2s;pointer-events:none;max-width:80%;text-align:center;}
+.toast.on{opacity:1;}
+.mini{font-size:12px;color:#6b7486;}
+a{color:#0b6efd;}
+/* 老版 X5/WebView 不支持 flex gap 的降级间距 */
+@supports not (gap:8px){
+  .stats>*,.chips>*,.row>*,.opts>*,.grid>*,.legend>*,.selfrow>*,.navbar .in>*{margin:4px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ============ HOME ============ -->
+<div class="screen on" id="s-home">
+  <div class="hero">
+    <h2>化学实验室安全题库</h2>
+    <p>依据北京大学出版社《化学实验室安全知识教程》· 共 2000 题<br>总览跳转 · 收藏 · 离线缓存 · 进度自动保存</p>
+    <div class="stats">
+      <div class="stat"><b id="h-total">2000</b><span>总题数</span></div>
+      <div class="stat"><b id="h-done">0</b><span>已作答</span></div>
+      <div class="stat"><b id="h-fav">0</b><span>已收藏</span></div>
+      <div class="stat"><b id="h-pct">0%</b><span>正确率</span></div>
+    </div>
+    <div class="progress-line"><i id="h-bar"></i></div>
+  </div>
+
+  <div class="sec-t">练习方式</div>
+  <div class="card">
+    <div class="chips" id="modes">
+      <div class="chip sel" data-mode="seq">顺序练习</div>
+      <div class="chip" data-mode="rand">随机练习</div>
+      <div class="chip" data-mode="fav">收藏练习</div>
+      <div class="chip" data-mode="wrong">错题练习</div>
+    </div>
+  </div>
+
+  <div class="sec-t">筛选范围（章节与题型可同时选）</div>
+  <div class="card">
+    <p class="label">章节</p>
+    <div class="chips" id="chChips"></div>
+    <p class="label" style="margin-top:12px">题型</p>
+    <div class="chips" id="tyChips"></div>
+    <p class="mini" id="cntTip" style="margin-top:10px">当前范围：共 2000 题</p>
+  </div>
+
+  <div class="row" style="margin-top:4px">
+    <button class="btn" id="startBtn">开始练习</button>
+    <button class="btn ghost" id="resumeBtn" style="display:none">继续上次</button>
+  </div>
+  <div class="row" style="margin-top:10px">
+    <button class="btn gray" id="browseBtn">浏览全部题目（看答案）</button>
+  </div>
+  <div class="row" style="margin-top:10px">
+    <button class="btn gray" id="resetBtn">清除进度</button>
+  </div>
+
+  <div class="sec-t">答题设置</div>
+  <div class="card">
+    <div class="row" style="align-items:center">
+      <div><div style="font-size:14px;font-weight:600">显示解析</div><div class="mini">作答后立即显示答案与解析</div></div>
+      <button class="icon-btn" id="optExplain" style="margin-left:auto">✓</button>
+    </div>
+    <div class="row" style="align-items:center;margin-top:12px">
+      <div><div style="font-size:14px;font-weight:600">自动跳下一题</div><div class="mini">答对后自动进入下一题</div></div>
+      <button class="icon-btn" id="optAuto" style="margin-left:auto"></button>
+    </div>
+  </div>
+  <p class="mini" style="text-align:center;margin-top:18px;line-height:1.7">
+    进度、收藏保存在本机浏览器，无需登录 · 支持 15 人同时独立使用<br>
+    <a href="#" id="aboutLink">关于题库 / 缓存说明</a>
+  </p>
+</div>
+
+<!-- ============ QUIZ ============ -->
+<div class="screen" id="s-quiz">
+  <div class="hd">
+    <div class="hd-row">
+      <button class="icon-btn" id="backBtn">‹</button>
+      <div style="flex:1;min-width:0">
+        <h1 id="q-title">答题中</h1>
+        <div class="sub" id="q-sub">—</div>
+      </div>
+      <button class="icon-btn" id="favBtn">☆</button>
+      <button class="icon-btn" id="overBtn">▦</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="qmeta">
+      <span class="qnum" id="q-num">第 1 / 2000 题</span>
+      <span class="tags"><span class="tag" id="q-type">单选题</span><span class="tag" id="q-chap">第1章</span></span>
+    </div>
+    <div class="qtext" id="q-text"></div>
+    <div id="q-body"></div>
+    <div class="ans-box" id="q-ans" style="display:none"></div>
+  </div>
+  <div class="card" style="padding:10px">
+    <div class="progress-line" style="margin:0"><i id="q-bar"></i></div>
+    <div class="mini" style="text-align:center;margin-top:6px" id="q-tip">点击选项作答</div>
+  </div>
+  <div class="navbar">
+    <div class="in">
+      <button class="btn gray" id="prevBtn">‹ 上一题</button>
+      <button class="btn" id="nextBtn">下一题 ›</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ OVERVIEW SHEET ============ -->
+<div class="mask" id="mask"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-h">
+    <h3>题目总览 <span class="mini" id="ov-stat"></span></h3>
+    <div class="row" style="margin:8px 0 4px">
+      <button class="btn gray sm" id="ov-prev">上一页</button>
+      <span class="mini" id="ov-page" style="text-align:center;line-height:30px">1 / 1</span>
+      <button class="btn gray sm" id="ov-next">下一页</button>
+    </div>
+    <div class="legend">
+      <span><i style="background:#eceff4"></i>未答</span>
+      <span><i style="background:#dff6e9"></i>正确</span>
+      <span><i style="background:#fde3e4"></i>错误</span>
+      <span><i style="background:#f7d98a"></i>已收藏</span>
+    </div>
+  </div>
+  <div class="grid" id="ov-grid"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+</div>
+
+<script src="bank.js"></script>
+<script>
+(function(){
+'use strict';
+var APP_VER='v3';
+var BANK = window.BANK || [];
+var CH = {1:'绪论',2:'消防安全',3:'消防设施与器材',4:'危险化学品',5:'用电安全',
+  6:'压力容器安全',7:'辐射安全与防护',8:'基本安全操作',9:'事故防范与应急',10:'废弃物处理'};
+var TN = {s:'单选题',m:'多选题',j:'判断题',b:'填空题',x:'解答题'};
+var PKEY='dsh001_prog_v3', SKEY='dsh001_sess_v3', OKEY='dsh001_opt_v3';
+var $ = function(id){return document.getElementById(id);};
+var storeOK = true;
+try{localStorage.setItem('__t','1');localStorage.removeItem('__t');}catch(e){storeOK=false;}
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){storeOK=false;return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,v);return true;}catch(e){storeOK=false;return false;}}
+function lsDel(k){try{localStorage.removeItem(k);}catch(e){}}
+
+var P = {}, S = null, OPT = {explain:true, auto:false};
+try{var p=lsGet(PKEY); if(p) P=JSON.parse(p)||{};}catch(e){P={};}
+try{var o=lsGet(OKEY); if(o){var oo=JSON.parse(o); if(oo) OPT=oo;}}catch(e){}
+var BYID = {};
+for(var i=0;i<BANK.length;i++){ BYID[BANK[i].id]=BANK[i]; }
+
+function saveP(){lsSet(PKEY,JSON.stringify(P));}
+function saveS(){if(S&&!S.review) lsSet(SKEY,JSON.stringify(S));}
+function clearS(){lsDel(SKEY);}
+function toast(msg){var t=$('toast');t.textContent=msg;t.className='toast on';clearTimeout(t._t);t._t=setTimeout(function(){t.className='toast';},1600);}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+
+/* ---------------- filters & home ---------------- */
+var MODE='seq', FCH='all', FTY='all';
+var CH_LIST=[['all','全部']], TY_LIST=[['all','全部'],['s','单选'],['m','多选'],['j','判断'],['b','填空'],['x','解答']];
+(function(){for(var i=1;i<=10;i++)CH_LIST.push([String(i),'第'+i+'章']);})();
+
+function matchFilter(q){
+  if(FCH!=='all' && String(q.ch)!==String(FCH)) return false;
+  if(FTY!=='all' && q.t!==FTY) return false;
+  return true;
+}
+function baseIds(){
+  var arr=[];
+  for(var i=0;i<BANK.length;i++){ if(matchFilter(BANK[i])) arr.push(BANK[i].id); }
+  if(MODE==='fav'){
+    arr=arr.filter(function(id){return P[id]&&P[id].f;});
+  }else if(MODE==='wrong'){
+    arr=arr.filter(function(id){return P[id]&&P[id].v&&!P[id].ok;});
+  }else if(MODE==='rand'){
+    arr=shuffle(arr);
+  }
+  return arr;
+}
+function renderHome(){
+  var done=0,right=0,fav=0;
+  for(var k in P){if(!P.hasOwnProperty(k))continue;var r=P[k];if(r.v){done++;if(r.ok)right++;}if(r.f)fav++;}
+  $('h-total').textContent=BANK.length;
+  $('h-done').textContent=done;
+  $('h-fav').textContent=fav;
+  $('h-pct').textContent=(done?Math.round(right/done*100):0)+'%';
+  $('h-bar').style.width=(done/BANK.length*100)+'%';
+  $('resumeBtn').style.display=lsGet(SKEY)?'':'none';
+  $('optExplain').textContent=OPT.explain?'✓':'';
+  $('optAuto').textContent=OPT.auto?'✓':'';
+  renderFilters();
+}
+function chipRow(el,list,cur,onclick){
+  var html='';
+  for(var i=0;i<list.length;i++){
+    html+='<div class="chip plain'+(String(cur)===String(list[i][0])?' sel':'')+'" data-v="'+list[i][0]+'">'+list[i][1]+'</div>';
+  }
+  el.innerHTML=html;
+  var cs=el.children;
+  for(var j=0;j<cs.length;j++){
+    cs[j].onclick=function(){ onclick(this.getAttribute('data-v')); };
+  }
+}
+function renderFilters(){
+  chipRow($('chChips'),CH_LIST,FCH,function(v){FCH=v;renderFilters();});
+  chipRow($('tyChips'),TY_LIST,FTY,function(v){FTY=v;renderFilters();});
+  var n=baseIds().length;
+  $('cntTip').textContent='当前范围：共 '+n+' 题'+(MODE==='fav'?'（收藏）':MODE==='wrong'?'（错题）':'');
+}
+(function bindHome(){
+  var ms=$('modes').children;
+  for(var i=0;i<ms.length;i++){ms[i].onclick=function(){
+    for(var j=0;j<ms.length;j++)ms[j].className='chip';
+    this.className='chip sel';MODE=this.getAttribute('data-mode');renderFilters();
+  };}
+  $('startBtn').onclick=function(){startQuiz(false);};
+  $('resumeBtn').onclick=function(){resumeQuiz();};
+  $('browseBtn').onclick=function(){startQuiz(true);};
+  $('resetBtn').onclick=function(){
+    ask('清除进度','将清除本机所有答题记录、收藏和进度（不可恢复），确定继续？',function(ok){
+      if(ok){P={};saveP();clearS();renderHome();toast('进度已清除');}
+    });
+  };
+  $('optExplain').onclick=function(){OPT.explain=!OPT.explain;lsSet(OKEY,JSON.stringify(OPT));renderHome();};
+  $('optAuto').onclick=function(){OPT.auto=!OPT.auto;lsSet(OKEY,JSON.stringify(OPT));renderHome();};
+  $('aboutLink').onclick=function(e){e.preventDefault();about();};
+})();
+
+function ask(title,msg,cb){
+  var box=document.createElement('div');
+  box.innerHTML='<div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(10,18,32,.5);z-index:90">'+
+    '<div style="position:absolute;left:8%;right:8%;top:30%;background:#fff;border-radius:16px;padding:20px;box-shadow:0 8px 30px rgba(0,0,0,.2)">'+
+    '<div style="font-size:16px;font-weight:700;margin-bottom:8px">'+esc(title)+'</div>'+
+    '<div style="font-size:14px;color:#556;line-height:1.6">'+msg+'</div>'+
+    '<div class="row" style="margin-top:16px"><button class="btn gray" id="__no">取消</button><button class="btn" id="__yes">确定</button></div></div></div>';
+  document.body.appendChild(box);
+  box.querySelector('#__no').onclick=function(){document.body.removeChild(box);cb(false);};
+  box.querySelector('#__yes').onclick=function(){document.body.removeChild(box);cb(true);};
+}
+function about(){
+  ask('关于 / 缓存说明',
+    '题库共 2000 题（'+APP_VER+'），依据北京大学出版社《化学实验室安全知识教程》编写。<br><br>'+
+    '• 进度与收藏保存在当前浏览器的 localStorage，不上传服务器。<br>'+
+    '• 页面与数据通过 Service Worker 缓存到本地，首次打开后断网也能进入。<br>'+
+    '• 建议在手机浏览器“添加到主屏幕”，即可像 App 一样一键打开。<br>'+
+    '• 具体数值请以教材与现行国标为准。',
+    function(){});
+}
+
+/* ---------------- quiz ---------------- */
+function startQuiz(review){
+  var ids=baseIds();
+  if(!ids.length){
+    toast(MODE==='fav'?'当前范围内没有收藏题':MODE==='wrong'?'当前范围内没有错题':'没有符合条件的题目');
+    return;
+  }
+  if(review){ ids=[]; for(var i=0;i<BANK.length;i++) ids.push(BANK[i].id); }
+  S={ids:ids, idx:0, mode:MODE, review:!!review, title:review?'浏览模式':(MODE==='fav'?'收藏练习':MODE==='wrong'?'错题练习':(MODE==='rand'?'随机练习':'顺序练习'))};
+  if(!review) saveS();
+  showScreen('s-quiz'); renderQ(); window.scrollTo(0,0);
+}
+function resumeQuiz(){
+  var raw=lsGet(SKEY);
+  if(!raw){toast('没有可继续的进度');return;}
+  try{S=JSON.parse(raw);}catch(e){S=null;}
+  if(!S||!S.ids||!S.ids.length){toast('进度已失效');return;}
+  S.review=false;
+  if(S.mode){ MODE=S.mode; var ms=$('modes').children;
+    for(var m=0;m<ms.length;m++){ ms[m].className='chip'+(ms[m].getAttribute('data-mode')===MODE?' sel':''); } }
+  showScreen('s-quiz'); renderQ(); window.scrollTo(0,0);
+}
+function showScreen(id){
+  var ss=document.querySelectorAll('.screen');
+  for(var i=0;i<ss.length;i++)ss[i].className='screen';
+  $(id).className='screen on';
+  var navql=$('s-quiz').getElementsByTagName('div');
+  window.scrollTo(0,0);
+}
+
+function statusOf(id){return P[id]?(P[id].v?(P[id].ok?1:2):0):0;}
+function isFav(id){return !!(P[id]&&P[id].f);}
+function answeredInList(){var n=0;for(var i=0;i<S.ids.length;i++){var r=P[S.ids[i]];if(r&&r.v)n++;}return n;}
+
+function renderQ(){
+  if(!S)return;
+  var q=BYID[S.ids[S.idx]];
+  if(!q){toast('题目不存在');return;}
+  $('q-title').textContent=S.title;
+  $('q-num').textContent='第 '+(S.idx+1)+' / '+S.ids.length+' 题  ·  题库编号 '+q.id;
+  $('q-sub').textContent=(S.review?'浏览模式（已显示答案）':'练习中')+'　已答 '+answeredInList()+' / '+S.ids.length;
+  $('q-type').textContent=TN[q.t]||'题目';
+  $('q-chap').textContent='第'+q.ch+'章 '+(CH[q.ch]||'');
+  $('q-text').textContent=q.q;
+  $('favBtn').textContent=isFav(q.id)?'★':'☆';
+  $('favBtn').className='icon-btn'+(isFav(q.id)?' fav':'');
+  var body=$('q-body'), ans=$('q-ans');
+  body.innerHTML=''; ans.style.display='none'; ans.innerHTML='';
+  var rec=P[q.id]||{}, answered=!!rec.v || S.review;
+  var letters=['A','B','C','D','E'];
+
+  if(q.t==='s'||q.t==='m'||q.t==='j'){
+    var opts=q.o||[];
+    var chosen=(rec.pick||'').split('');
+    var wrap=document.createElement('div');wrap.className='opts';
+    for(var k=0;k<opts.length;k++){
+      (function(kk){
+        var d=document.createElement('button');d.className='opt';
+        var key=(q.t==='j')?String(opts[kk]):(letters[kk]||String(kk+1));
+        var showKey=(q.t==='j')?(kk===0?'√':'×'):key;
+        d.innerHTML='<span class="k">'+esc(showKey)+'</span><span>'+esc(opts[kk])+'</span>';
+        if(answered){
+          d.className+=' dis';
+          var correct=(q.a||'').indexOf(key)>=0;
+          var picked=chosen.indexOf(key)>=0;
+          if(correct)d.className+=' right';
+          else if(picked)d.className+=' wrong';
+        }else if(chosen.indexOf(key)>=0){d.className+=' sel';}
+        d.onclick=function(){pick(q,key);};
+        wrap.appendChild(d);
+      })(k);
+    }
+    body.appendChild(wrap);
+    if(q.t==='m'&&!answered){
+      var mc=document.createElement('button');mc.className='btn';mc.style.width='100%';mc.style.marginTop='12px';
+      mc.textContent='确认答案（已选 '+((rec.pick||'').length||0)+' 项）';
+      mc.onclick=function(){ confirmMulti(q); };
+      body.appendChild(mc);
+    }
+    if(answered) shareAns(q,rec);
+  }else if(q.t==='b'){
+    var count=(q.q.match(/____/g)||[]).length||(q.a||[]).length;
+    var pre=(rec.pick||'').split('\u0001');
+    var bw=document.createElement('div');bw.className='blanks';
+    for(var b=0;b<count;b++){
+      var inp=document.createElement('input');inp.className='fill';inp.placeholder='第 '+(b+1)+' 空';
+      inp.value=pre[b]||'';inp.setAttribute('data-b',b);
+      if(answered)inp.disabled=true;
+      bw.appendChild(inp);
+    }
+    body.appendChild(bw);
+    if(!answered){
+      var sb=document.createElement('button');sb.className='btn';sb.style.width='100%';sb.style.marginTop='8px';
+      sb.textContent='提交答案';
+      sb.onclick=function(){ submitBlank(q); };
+      body.appendChild(sb);
+    }
+    if(answered) shareAns(q,rec);
+  }else{
+    var ta=document.createElement('textarea');ta.className='fill';ta.rows=4;ta.id='q-note';
+    ta.placeholder='在此写下你的答案（可选，仅自己可见）';
+    ta.value=rec.note||'';
+    body.appendChild(ta);
+    if(S.review){
+      shareAns(q,rec);
+    }else if(!rec.v){
+      var sr=document.createElement('div');sr.className='selfrow';
+      sr.innerHTML='<button class="btn ghost" id="selfRight">我答对了</button><button class="btn gray" id="selfWrong">没答对 / 不会</button>';
+      body.appendChild(sr);
+      $('selfRight').onclick=function(){gradeShort(q,true);};
+      $('selfWrong').onclick=function(){gradeShort(q,false);};
+    }else{
+      shareAns(q,rec);
+    }
+  }
+  $('q-bar').style.width=((S.idx+1)/S.ids.length*100)+'%';
+  $('q-tip').textContent=S.review?'浏览模式：已直接显示答案，可用下方按钮切换':'可点右上角 ▦ 总览跳转，或下方按钮切题';
+  $('prevBtn').disabled=(S.idx<=0);
+  $('nextBtn').textContent=(S.idx>=S.ids.length-1)?'完成 ✓':'下一题 ›';
+}
+
+/* ---- answering ---- */
+function pick(q,key){
+  var rec=P[q.id]||{};
+  if(rec.v) return;
+  if(q.t==='j'||q.t==='s'){
+    rec.pick=key; rec.v=true; rec.ok=(q.a===key);
+    P[q.id]=rec; saveP(); renderQ();
+    maybeAutoNext(rec.ok);
+    return;
+  }
+  /* multi: toggle then re-render (confirm button shows count) */
+  var cur=(rec.pick||'').split('');
+  var ix=cur.indexOf(key);
+  if(ix>=0)cur.splice(ix,1);else cur.push(key);
+  cur.sort(); rec.pick=cur.join('');
+  P[q.id]=rec; saveP(); renderQ();
+}
+function confirmMulti(q){
+  var r=P[q.id]||{};
+  r.v=true; r.ok=((r.pick||'').split('').sort().join('')===(q.a||'').split('').sort().join(''));
+  P[q.id]=r; saveP(); renderQ();
+  maybeAutoNext(r.ok);
+}
+function normBlank(s){
+  return String(s||'').toLowerCase().replace(/[\s，。、；;：:（）()“”"\'`？?！!,.．\-—…《》]/g,'');
+}
+function submitBlank(q){
+  var ins=$('q-body').getElementsByTagName('input'), vals=[];
+  for(var i=0;i<ins.length;i++) vals.push((ins[i].value||'').trim());
+  var r=P[q.id]||{}; r.pick=vals.join('\u0001');
+  var ansl=q.a||[], ok=ansl.length>0;
+  for(var j=0;j<ansl.length;j++){
+    var u=normBlank(vals[j]), a=normBlank(ansl[j]);
+    if(!u) { ok=false; break; }
+    if(!(a.indexOf(u)>=0 || u.indexOf(a)>=0)) { ok=false; break; }
+  }
+  r.v=true; r.ok=ok; P[q.id]=r; saveP(); renderQ();
+  maybeAutoNext(ok);
+}
+function gradeShort(q,ok){
+  var r=P[q.id]||{};
+  var ta=$('q-note'); r.note=ta?(ta.value||''):'';
+  r.v=true; r.ok=ok; P[q.id]=r; saveP(); renderQ();
+}
+function maybeAutoNext(ok){
+  if(!OPT.auto) return;
+  if(!S || S.review) return;
+  if(S.idx>=S.ids.length-1) return;
+  var curS=S, at=S.idx;
+  var wait=ok?650:1800;
+  setTimeout(function(){
+    if(S===curS && !S.review && S.idx===at && S.idx<S.ids.length-1){ S.idx++; saveS(); renderQ(); window.scrollTo(0,0); }
+  }, wait);
+}
+function shareAns(q,rec){
+  var a=$('q-ans');
+  if(!OPT.explain && !S.review) return;
+  a.style.display='';
+  var head='';
+  if(S.review){ head='<span class="lbl">参考答案：</span>'; }
+  else { head='<span class="'+(rec.ok?'ok':'no')+'">'+(rec.ok?'✓ 回答正确':'✗ 回答错误')+'</span>　<span class="lbl">正确答案：</span>'; }
+  var txt='';
+  if(q.t==='j') txt=(q.a==='对'?'对':'错');
+  else if(q.t==='b') txt=(q.a||[]).join(' / ');
+  else if(q.t==='x') txt='';
+  else txt=(q.a||'');
+  var body='';
+  if(q.t==='x'){
+    body='<div style="margin-top:6px;white-space:pre-wrap">'+esc(q.a||'')+'</div>';
+  }else{
+    body='<div style="margin-top:4px;font-weight:700">'+esc(txt)+'</div>';
+    if(q.e) body+='<div style="margin-top:8px"><span class="lbl">解析：</span>'+esc(q.e)+'</div>';
+    if(q.t==='b'){
+      var pre=(rec.pick||'').split('\u0001');
+      var has=pre.some(function(x){return x&&x.trim();});
+      if(has) body+='<div style="margin-top:6px;color:#6b7486;font-size:12px">你的答案：'+esc(pre.join(' / '))+'</div>';
+    }
+  }
+  a.innerHTML=head+body;
+}
+
+function go(step){
+  if(!S)return;
+  var n=S.idx+step;
+  if(n<0){toast('已经是第一题');return;}
+  if(n>=S.ids.length){onFinish();return;}
+  S.idx=n; saveS(); renderQ(); window.scrollTo(0,0);
+}
+function onFinish(){
+  ask('已完成','本组题目已全部作答 / 浏览，返回首页？',function(ok){
+    if(ok){ showScreen('s-home'); renderHome(); }
+  });
+}
+function toggleFav(){
+  if(!S)return; var q=BYID[S.ids[S.idx]]; if(!q)return;
+  var r=P[q.id]||{}; r.f=!r.f; P[q.id]=r; saveP(); renderQ();
+  toast(r.f?'已收藏':'已取消收藏');
+}
+(function bindQuiz(){
+  $('backBtn').onclick=function(){ if(S&&!S.review) saveS(); showScreen('s-home'); renderHome(); };
+  $('favBtn').onclick=toggleFav;
+  $('overBtn').onclick=openOverview;
+  $('prevBtn').onclick=function(){go(-1);};
+  $('nextBtn').onclick=function(){go(1);};
+  $('mask').onclick=closeOverview;
+  function inField(t){var n=((t&&t.tagName)||'').toUpperCase();return n==='INPUT'||n==='TEXTAREA'||!!(t&&t.isContentEditable);}
+  document.addEventListener('keydown',function(e){
+    if(!$('s-quiz').classList.contains('on'))return;
+    if(inField(e.target))return;
+    if(e.key==='ArrowLeft'||e.key==='a'||e.key==='A')go(-1);
+    if(e.key==='ArrowRight'||e.key==='d'||e.key==='D')go(1);
+  });
+  var sx=0,sy=0;
+  document.addEventListener('touchstart',function(e){
+    if(!$('s-quiz').classList.contains('on'))return;
+    if(inField(e.target))return;
+    sx=e.touches[0].clientX;sy=e.touches[0].clientY;
+  },{passive:true});
+  document.addEventListener('touchend',function(e){
+    if(!$('s-quiz').classList.contains('on'))return;
+    if(inField(e.target))return;
+    var dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;
+    if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.5) go(dx<0?1:-1);
+  },{passive:true});
+})();
+
+/* ---------------- overview ---------------- */
+var OV_PAGE=0, OV_SIZE=100;
+function openOverview(){
+  if(!S)return;
+  OV_PAGE=Math.floor(S.idx/OV_SIZE);
+  drawOverview();
+  $('mask').className='mask on';$('sheet').className='sheet on';
+}
+function drawOverview(){
+  var g=$('ov-grid');g.innerHTML='';
+  var ok=0,no=0,dn=0;
+  for(var i=0;i<S.ids.length;i++){
+    var st=statusOf(S.ids[i]);
+    if(st===1)ok++;else if(st===2)no++;if(st)dn++;
+  }
+  var pages=Math.max(1,Math.ceil(S.ids.length/OV_SIZE));
+  if(OV_PAGE<0)OV_PAGE=0;if(OV_PAGE>=pages)OV_PAGE=pages-1;
+  var start=OV_PAGE*OV_SIZE,end=Math.min(start+OV_SIZE,S.ids.length);
+  for(var k=start;k<end;k++){
+    (function(idx){
+      var id=S.ids[idx],st=statusOf(id),r=P[id]||{};
+      var d=document.createElement('div');
+      d.className='cell'+(st===1?' ok':st===2?' no':'')+(idx===S.idx?' cur':'');
+      d.textContent=idx+1;
+      if(r.f){var s=document.createElement('span');s.className='dot';s.textContent='★';d.appendChild(s);}
+      d.onclick=function(){S.idx=idx;saveS();renderQ();closeOverview();window.scrollTo(0,0);};
+      g.appendChild(d);
+    })(k);
+  }
+  $('ov-page').textContent=(OV_PAGE+1)+' / '+pages;
+  $('ov-prev').onclick=function(){OV_PAGE--;drawOverview();};
+  $('ov-next').onclick=function(){OV_PAGE++;drawOverview();};
+  $('ov-stat').textContent='已答 '+dn+' / '+S.ids.length+'（正确 '+ok+' · 错误 '+no+'）';
+}
+function closeOverview(){$('mask').className='mask';$('sheet').className='sheet';}
+
+/* ---------------- init ---------------- */
+renderHome();
+if(!storeOK)toast('当前浏览器禁用了本地存储，进度不会保存');
+
+/* 供自动化自测使用（不影响正常使用） */
+window.__app={startQuiz:startQuiz,baseIds:baseIds,renderQ:renderQ,
+  getS:function(){return S;},getP:function(){return P;},getOPT:function(){return OPT;},
+  BYID:BYID,setFilter:function(c,t){if(c)FCH=c;if(t)FTY=t;renderFilters();}};
+
+/* ---------------- service worker ---------------- */
+if('serviceWorker' in navigator){
+  var hadController=!!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener('controllerchange',function(){
+    if(hadController && !window.__swReloaded){ window.__swReloaded=1; location.reload(); }
+  });
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('sw.js').then(function(reg){ try{reg.update();}catch(e){} }, function(){});
+  });
+}
+})();
+</script>
+</body>
+</html>
