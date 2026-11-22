@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <rect width="192" height="192" rx="42" fill="#0b6efd"/>
+  <rect x="30" y="26" width="132" height="140" rx="16" fill="#ffffff"/>
+  <rect x="52" y="20" width="88" height="18" rx="9" fill="#0b6efd"/>
+  <text x="96" y="112" font-size="72" font-family="sans-serif" font-weight="bold" text-anchor="middle" fill="#0b6efd">安</text>
+  <rect x="52" y="134" width="88" height="8" rx="4" fill="#d7e4ff"/>
+  <rect x="52" y="150" width="60" height="8" rx="4" fill="#d7e4ff"/>
+</svg>
