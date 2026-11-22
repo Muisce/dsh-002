@@ -1,0 +1,14 @@
+{
+  "name": "化学实验室安全题库 · 2000题",
+  "short_name": "安全题库",
+  "description": "依据北京大学出版社《化学实验室安全知识教程》编写的2000题配套题库，支持总览切换、收藏、离线缓存。",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f2f4f8",
+  "theme_color": "#0b6efd",
+  "icons": [
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
